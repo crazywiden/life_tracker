@@ -4,7 +4,7 @@ export function SetupState() {
       <p className="eyebrow">Setup Required</p>
       <h1>Life Tracker needs Supabase credentials before it can run.</h1>
       <p>
-        Copy <code>.env.example</code> to <code>.env.local</code>, fill in your Supabase URL, anon key, and
+        Copy <code>.env.example</code> to <code>.env.local</code>, fill in your Supabase URL, publishable key, and
         allowlisted email, then apply the SQL migration in <code>supabase/migrations</code>.
       </p>
       <p>

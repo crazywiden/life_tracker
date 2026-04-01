@@ -11,6 +11,9 @@
   --empty: #ebe4d6;
   --partial: #f2bf8e;
   --strong: #d55a2f;
+  --habit-gym: #8b2f14;
+  --habit-reading: #2d5b89;
+  --habit-diary: #4f6b2f;
 }
 
 * {
@@ -280,6 +283,21 @@ button {
   gap: 8px;
 }
 
+.calendar-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.legend-item {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.92rem;
+  color: var(--muted);
+}
+
 .calendar-cell {
   min-height: 108px;
   padding: 10px;
@@ -312,15 +330,67 @@ button {
   gap: 6px;
 }
 
-.marker {
-  width: 12px;
-  height: 12px;
+.habit-marker {
+  width: 18px;
+  height: 18px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   border: 1px solid rgba(23, 20, 15, 0.28);
   background: rgba(255, 255, 255, 0.35);
+  color: rgba(23, 20, 15, 0.38);
 }
 
-.marker[data-active="true"] {
-  background: rgba(23, 20, 15, 0.88);
+.habit-marker[data-active="true"] {
+  background: rgba(23, 20, 15, 0.18);
+  color: #fff9f2;
+}
+
+.habit-marker[data-kind="gym"] {
+  color: var(--habit-gym);
+}
+
+.habit-marker[data-kind="reading"] {
+  color: var(--habit-reading);
+}
+
+.habit-marker[data-kind="diary"] {
+  color: var(--habit-diary);
+}
+
+.habit-marker[data-kind="gym"][data-active="true"] {
+  background: var(--habit-gym);
+  border-color: var(--habit-gym);
+}
+
+.habit-marker[data-kind="reading"][data-active="true"] {
+  background: var(--habit-reading);
+  border-color: var(--habit-reading);
+}
+
+.habit-marker[data-kind="diary"][data-active="true"] {
+  background: var(--habit-diary);
+  border-color: var(--habit-diary);
+}
+
+.habit-marker[data-kind="reading"] {
+  border-radius: 4px;
+}
+
+.habit-marker[data-kind="diary"] {
+  border-radius: 999px;
+}
+
+.calendar-cell[data-strength="strong"] .habit-marker[data-active="false"] {
+  background: rgba(255, 249, 242, 0.12);
+  border-color: rgba(255, 249, 242, 0.4);
+  color: rgba(255, 249, 242, 0.72);
+}
+
+.habit-icon {
+  width: 12px;
+  height: 12px;
+  display: block;
 }
 
 .template-list {

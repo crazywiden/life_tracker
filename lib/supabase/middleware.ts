@@ -1,14 +1,14 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 
-import { getSupabaseAnonKey, getSupabaseUrl } from "@/lib/env";
+import { getSupabasePublishableKey, getSupabaseUrl } from "@/lib/env";
 
 export function updateSession(request: NextRequest) {
   let response = NextResponse.next({
     request
   });
 
-  const supabase = createServerClient(getSupabaseUrl(), getSupabaseAnonKey(), {
+  const supabase = createServerClient(getSupabaseUrl(), getSupabasePublishableKey(), {
     cookies: {
       getAll() {
         return request.cookies.getAll();

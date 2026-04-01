@@ -50,7 +50,7 @@ This is not just another habit tracker. The useful part is the combination of:
 - The product should work across devices without requiring a migration from local-only storage later.
 
 ### Authentication Shape
-- Version 1 uses email magic-link authentication.
+- Version 1 uses password authentication for one allowlisted email account.
 - Access is restricted to a single allowlisted email address.
 - The app should reject sign-in attempts from any other email even if the auth provider could otherwise create the account.
 - Password management, password reset, and multi-user onboarding are out of scope for version 1.

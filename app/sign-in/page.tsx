@@ -1,47 +1,13 @@
-import { headers } from "next/headers";
-import { redirect } from "next/navigation";
-
 import { SetupState } from "@/components/setup-state";
-import { getAllowlistedEmail, getAppUrl, isSupabaseConfigured } from "@/lib/env";
-import { createSupabaseServerClient } from "@/lib/supabase/server";
+import { isSupabaseConfigured } from "@/lib/env";
 
 type SignInPageProps = {
   searchParams: Promise<Record<string, string | string[] | undefined>>;
 };
 
-async function requestMagicLink(formData: FormData) {
-  "use server";
-
-  const email = String(formData.get("email") ?? "").trim().toLowerCase();
-  if (email !== getAllowlistedEmail()) {
-    redirect("/sign-in?error=allowlist");
-  }
-
-  const supabase = await createSupabaseServerClient();
-  const headerStore = await headers();
-  const forwardedHost = headerStore.get("x-forwarded-host");
-  const forwardedProto = headerStore.get("x-forwarded-proto");
-  const origin = forwardedHost ? `${forwardedProto ?? "https"}://${forwardedHost}` : getAppUrl();
-
-  const { error } = await supabase.auth.signInWithOtp({
-    email,
-    options: {
-      shouldCreateUser: true,
-      emailRedirectTo: `${origin}/auth/confirm?next=/today`
-    }
-  });
-
-  if (error) {
-    redirect(`/sign-in?error=${encodeURIComponent(error.message)}`);
-  }
-
-  redirect("/sign-in?status=sent");
-}
-
 export default async function SignInPage({ searchParams }: SignInPageProps) {
   const params = await searchParams;
   const error = Array.isArray(params.error) ? params.error[0] : params.error;
-  const status = Array.isArray(params.status) ? params.status[0] : params.status;
 
   return (
     <main className="shell auth-shell">
@@ -50,25 +16,22 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
       ) : (
         <section className="panel">
           <p className="eyebrow">Private Access</p>
-          <h1 className="page-title">Sign in with your allowlisted email.</h1>
+          <h1 className="page-title">Sign in with your private password.</h1>
           <p className="muted-copy">
-            This app uses magic-link sign-in and only accepts the email configured in the environment.
+            This app signs into the one account configured in the environment. You only need the password here.
           </p>
           {error ? (
             <div className="error-banner">
-              {error === "allowlist" ? "That email is not allowed to access this app." : error}
+              {error === "credentials" ? "The password was incorrect." : error}
             </div>
           ) : null}
-          {status === "sent" ? (
-            <div className="success-banner">Check your email for the magic link.</div>
-          ) : null}
-          <form action={requestMagicLink} className="stack">
+          <form action="/api/auth/sign-in" method="post" className="stack">
             <label>
-              <span className="eyebrow">Email</span>
-              <input type="email" name="email" className="field" required placeholder={getAllowlistedEmail()} />
+              <span className="eyebrow">Password</span>
+              <input type="password" name="password" className="field" required autoComplete="current-password" />
             </label>
             <button type="submit" className="primary-button">
-              Send magic link
+              Sign in
             </button>
           </form>
         </section>

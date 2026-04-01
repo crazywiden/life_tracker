@@ -6,16 +6,31 @@ function required(name: string): string {
   return value;
 }
 
+function getSupabasePublicClientKeyFromEnv(): string | undefined {
+  return (
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_PUBLISHABLE_DEFAULT_KEY ||
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY
+  );
+}
+
 export function isSupabaseConfigured(): boolean {
-  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY);
+  return Boolean(process.env.NEXT_PUBLIC_SUPABASE_URL && getSupabasePublicClientKeyFromEnv());
 }
 
 export function getSupabaseUrl(): string {
   return required("NEXT_PUBLIC_SUPABASE_URL");
 }
 
-export function getSupabaseAnonKey(): string {
-  return required("NEXT_PUBLIC_SUPABASE_ANON_KEY");
+export function getSupabasePublishableKey(): string {
+  const value = getSupabasePublicClientKeyFromEnv();
+  if (!value) {
+    throw new Error(
+      "Missing required environment variable: NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY (or legacy NEXT_PUBLIC_SUPABASE_ANON_KEY)"
+    );
+  }
+
+  return value;
 }
 
 export function getAllowlistedEmail(): string {
